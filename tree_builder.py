@@ -16,8 +16,8 @@ class Config:
 
     
 class TreeBuilder:
-    def __init__(self, config):
-        self.config = config
+    def __init__(self):
+        self.config = ''
         self.filename = '' # Current file
         self.paragraph_index = 0 # Current paragraph
     
@@ -25,16 +25,26 @@ class TreeBuilder:
         pass    
     
     def get_lines(self):
-        if self.config.source == 'file':
-            with open(self.config.filename) as f:
-                lines = f.readlines()
+        pass
 
     def get_paragraph(self):
         '''
         Generate SRL labels of a paragraph.
         The paragraph is located by self.filename and self.paragraph_index.
         '''
-        pass
+        if self.config == 'file':
+            pass
+        
+            
+                    
+    def get_paragraph_from_file(self):
+        with open(self.filename) as f:
+            count, cnt = 0, 0
+            for _, line in enumerate(f):
+                cnt +=1
+                if '\t' not in line:
+                    count += 1
+            return count
     
     def build_tree(self):
         '''
