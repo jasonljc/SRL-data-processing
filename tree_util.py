@@ -28,9 +28,16 @@ class Node:
     	return str(self.label['id'])
         
     def add_child(self, child):
+    	'''
+    	Adding a child to the current node.
+    	'''
     	self.children.append(child)
     	
     def find(self, field, value):
+    	'''
+    	Find the shallowest node that have certain field's value equal to given 
+    	value.
+    	'''
     	if self.label.get(field) == value:
     		return self
     	else:
@@ -40,7 +47,11 @@ class Node:
     			return child.find(field, value)
     	
     	
-    def find_child_list(self, field, value_list):
+    def find_list(self, field, value_list):
+    	'''
+    	Find the shallowest node that have certain field's value equal to one of
+    	the given values.
+    	'''
     	if self.label.get(field) in value_list:
     		return self
     	else:
