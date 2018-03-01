@@ -30,11 +30,24 @@ class Node:
     def add_child(self, child):
     	self.children.append(child)
     	
-    def find_child(self, field, value):
-    	for child in self.children:
-    		if child.label.get(field) == value:
-    			return child
-    	return None
+    def find(self, field, value):
+    	if self.label.get(field) == value:
+    		return self
+    	else:
+    		if not self.children:
+    			return None
+    		for child in self.children:
+    			return child.find(field, value)
+    	
+    	
+    def find_child_list(self, field, value_list):
+    	if self.label.get(field) in value_list:
+    		return self
+    	else:
+    		if not self.children:
+    			return None
+    		for child in self.children:
+    			return child.find(field, value_list)
     
     def del_child(self, field, value):
     	for i, child in enumerate(self.children):
