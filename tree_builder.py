@@ -38,15 +38,22 @@ class TreeBuilder:
             
                     
     def get_paragraph_from_file(self):
+        '''
+        Generate each paragraph as a list of lines.
+        '''
         with open(self.filename) as f:
-            count, cnt = 0, 0
+            count = 0
+            buf = []
             for _, line in enumerate(f):
-                cnt +=1
                 if '\t' not in line:
                     count += 1
-            return count
+                    yield buf
+                    buf = []
+                else:
+                    buf.append(line)
+            yield buf
     
-    def build_tree(self):
+    def build_tree(self, paragraph):
         '''
         Build tree from the current get_lines().
         
@@ -55,36 +62,41 @@ class TreeBuilder:
         '''
         # Create nodes and index.
         _dict = {}
-        for line in self.get_paragraph():
-            fields = line.split('/t')
+        for line in paragraph:
+            fields = line.split('\t')
+            if len(fields) <2:
+                continue
             _label = {
                 'id':int(fields[0]),
                 'form':fields[1],
                 'lemma':fields[2],
-                'pos':int(fields[3]),
+                'pos':fields[3],
                 'feats':fields[4],
                 'head':int(fields[5]),
                 'deprel':fields[6],
                 'sheads':fields[7],
             }
-            _dict[fields[0]] = tree_util.Node(_label)
+            print 'adding %s'%fields[0]
+            _dict[int(fields[0])] = tree_util.Node(label=_label, children=[])
+        
+        print len(_dict)
         
         # Connect nodes.
         root = None
-        for _, n in _dict:
-            if n.label.head != 0:
-                _dict[n.label.head].add_children([n])
+        for _, n in _dict.items():
+            if n.label['head'] != 0:
+                _dict[n.label['head']].add_child(n)
             else:
                 root = n
         
         return root
         
     
-    def build_from_config(self):
-        '''
-        A interface for building all files and paragraphs from config.
-        '''
+    # def build_from_config(self):
+    #     '''
+    #     A interface for building all files and paragraphs from config.
+    #     '''
         
-        if self.config.source == 'file':
-            for i in range(len(self.config.filenames)):
-                pass
+    #     if self.config.source == 'file':
+    #         for i in range(len(self.config.filenames)):
+    #             pass

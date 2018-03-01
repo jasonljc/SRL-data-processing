@@ -24,8 +24,11 @@ class Node:
         self.label = label # A dictionary containing 8 fields (optional)
         self.children = children
         
-    def add_children(self, children):
-    	self.children.extend(children)
+    def __str__(self):
+    	return str(self.label['id'])
+        
+    def add_child(self, child):
+    	self.children.append(child)
     	
     def find_child(self, field, value):
     	for child in self.children:
