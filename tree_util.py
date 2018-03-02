@@ -8,7 +8,7 @@ Operations includes:
 author: JL <linjiach@usc.edu>
 '''
 
-class Node:
+class Node(object):
     def __init__(self, label, children=[]):
     	'''
 		The semantic role labeling format requires 8 fields.
