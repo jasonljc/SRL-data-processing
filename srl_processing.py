@@ -17,7 +17,6 @@ def file_loader(filename, col=0):
 
 base_forms = []
 stative_verbs = []
-possesive_pronouns = []
 actors = []
 
 
@@ -48,8 +47,8 @@ def main():
         if not stative_verb_node:
             print 'no stative verb found'
             continue
-        possesive_pronoun_node = stative_verb_node.find_list('form', possesive_pronouns)
-        if not possesive_pronouns:
+        possesive_pronoun_node = stative_verb_node.find('deprel', 'poss')
+        if not possesive_pronoun_node:
             print 'no possesive pronoun found'
             # find actor directly.
             

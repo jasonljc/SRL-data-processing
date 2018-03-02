@@ -35,30 +35,28 @@ class Node(object):
     	
     def find(self, field, value):
     	'''
-    	Find the shallowest node that have certain field's value equal to given 
+    	Find the nodes that have certain field's value equal to given 
     	value.
     	'''
+    	ret = []
     	if self.label.get(field) == value:
-    		return self
-    	else:
-    		if not self.children:
-    			return None
-    		for child in self.children:
-    			return child.find(field, value)
+    		ret.append(self)
+    	for child in self.children:
+    		ret+=child.find(field, value)
+    	return ret
     	
     	
     def find_list(self, field, value_list):
     	'''
-    	Find the shallowest node that have certain field's value equal to one of
+    	Find the nodes that have certain field's value equal to one of
     	the given values.
     	'''
+    	ret = []
     	if self.label.get(field) in value_list:
-    		return self
-    	else:
-    		if not self.children:
-    			return None
-    		for child in self.children:
-    			return child.find(field, value_list)
+    		ret.append(self)
+		for child in self.children:
+			ret+=child.find_list(field, value_list)
+		return ret
     
     def del_child(self, field, value):
     	for i, child in enumerate(self.children):
