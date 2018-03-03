@@ -19,7 +19,7 @@ class TreeBuilder:
     def __init__(self):
         self.config = ''
         self.filename = '' # Current file
-        self.paragraph_index = 0 # Current paragraph
+        self.sentence_index = 0 # Current sentence
     
     def set_config(self, config):
         pass    
@@ -27,9 +27,9 @@ class TreeBuilder:
     def get_lines(self):
         pass
 
-    def get_paragraph(self):
+    def get_sentence(self):
         '''
-        Generate SRL labels of a paragraph.
+        Generate SRL labels of a sentence.
         The paragraph is located by self.filename and self.paragraph_index.
         '''
         if self.config == 'file':
@@ -37,9 +37,9 @@ class TreeBuilder:
         
             
                     
-    def get_paragraph_from_file(self):
+    def get_sentence_from_file(self):
         '''
-        Generate each paragraph as a list of lines.
+        Generate each sentence as a list of lines.
         '''
         with open(self.filename) as f:
             count = 0
@@ -51,9 +51,10 @@ class TreeBuilder:
                     buf = []
                 else:
                     buf.append(line)
-            yield buf
+            if buf:
+                yield buf
     
-    def build_tree(self, paragraph):
+    def build_tree(self, sentence):
         '''
         Build tree from the current get_lines().
         
@@ -62,7 +63,7 @@ class TreeBuilder:
         '''
         # Create nodes and index.
         _dict = {}
-        for line in paragraph:
+        for line in sentence:
             fields = line.split('\t')
             if len(fields) <2:
                 continue
@@ -76,10 +77,7 @@ class TreeBuilder:
                 'deprel':fields[6],
                 'sheads':fields[7],
             }
-            print 'adding %s'%fields[0]
             _dict[int(fields[0])] = tree_util.Node(label=_label, children=[])
-        
-        print len(_dict)
         
         # Connect nodes.
         root = None
@@ -88,8 +86,13 @@ class TreeBuilder:
                 _dict[n.label['head']].add_child(n)
             else:
                 root = n
+                
+            # if n.label['sheads'] == '_\n':
+            #     root_nodes.append(n)
+            #     continue
+            # parent = int(n.label['sheads'].split(':')[0])
         
-        return root
+        return [root]
         
     
     # def build_from_config(self):
